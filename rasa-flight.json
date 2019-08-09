@@ -1,0 +1,483 @@
+{
+  "rasa_nlu_data": {
+    "regex_features": [
+      {
+        "name": "flight_num",
+        "pattern": "\b[A-Za-z]{2}[0-9]{1,4}\b|\b[A-Za-z]{1}[0-9]{2,5}\b|\b[0-9]{1}[A-Za-z]{1}[0-9]{1,4}\b"
+      }
+    ],
+    "entity_synonyms": [
+      {
+        "value": "chinese",
+        "synonyms": ["Chinese", "Chines", "chines"]
+      },
+      {
+        "value": "time",
+        "synonyms": ["when"]
+      },
+      {
+        "value": "rate",
+        "synonyms": ["performance"]
+      }
+    ],
+    "common_examples": [
+      {
+        "text": "hey",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "howdy",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "hey there",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "hello",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "hi",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "good morning",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "good evening",
+        "intent": "greet",
+        "entities": []
+      },
+      {
+        "text": "yes",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "yep",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "yeah",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "indeed",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "that's right",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "ok",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "great",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "right, thank you",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "correct",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "great choice",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "sounds really good",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "i like it",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "i love it",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "good idea",
+        "intent": "affirm",
+        "entities": []
+      },
+      {
+        "text": "i really appreciate it",
+        "intent": "affirm",
+        "entities": []
+      },
+
+      {
+        "text": "what can you do?",
+        "intent": "ask_detail"
+      },
+      {
+        "text": "how can you help me?",
+        "intent": "ask_detail"
+      },
+      {
+        "text": "what should I ask?",
+        "intent": "ask_detail"
+      },
+      {
+        "text": "how should i use this?",
+        "intent": "ask_detail"
+      },
+      {
+        "text": "how can i use this?",
+        "intent": "ask_detail"
+      },
+      {
+        "text": "what's the time of departure?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 11,
+            "end": 15,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the actual time for departure?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 18,
+            "end": 22,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "when did it arrive for real?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 0,
+            "end": 4,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "when did it depart actually?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 0,
+            "end": 4,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the real arrival time?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 24,
+            "end": 28,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the real time for arrival?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 16,
+            "end": 20,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the real time of arrival?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 16,
+            "end": 20,
+            "value": "time",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the on-time rate on average?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 19,
+            "end": 23,
+            "value": "rate",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the on-time performance?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 19,
+            "end": 30,
+            "value": "rate",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the flight status?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 18,
+            "end": 24,
+            "value": "status",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "how about the flight status?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 21,
+            "end": 27,
+            "value": "status",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what's the type of the aircraft?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 11,
+            "end": 15,
+            "value": "type",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "how about the aircraft type?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 23,
+            "end": 27,
+            "value": "type",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "how long is the route?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 16,
+            "end": 21,
+            "value": "route",
+            "entity": "detail_type"
+          }
+        ]
+      },
+      {
+        "text": "what about the route?",
+        "intent": "ask_detail",
+        "entities": [
+          {
+            "start": 15,
+            "end": 20,
+            "value": "route",
+            "entity": "detail_type"
+          }
+        ]
+      },
+
+      {
+        "text": "what's the real time of arrival?",
+        "intent": "ask_detail"
+      },
+
+      {
+        "text": "i want to fly from boston and arrive in denver at Oct 16",
+        "intent": "search_flight"
+      },
+      {
+        "text": "flights from pittsburgh to baltimore",
+        "intent": "search_flight"
+      },
+      {
+        "text": "find me all the flights from beijing to shanghai in Jun 4",
+        "intent": "search_flight"
+      },
+      {
+        "text": "can you search the flight from Harbin to Shenzhen today?",
+        "intent": "search_flight"
+      },
+      {
+        "text": "I want some information about today's flights from Tokyo to Singapore",
+        "intent": "search_flight"
+      },
+      {
+        "text": "what choice do I have from LA to San Diego tomorrow?",
+        "intent": "search_flight"
+      },
+      {
+        "text": "how many flights is there from New York to London at Feb 23?",
+        "intent": "search_flight"
+      },
+      {
+        "text": "what is the earliest flight from Chicago to Guangzhou tomorrow? ",
+        "intent": "search_flight"
+      },
+      {
+        "text": "search BA038 at Aug 23",
+        "intent": "search_flight"
+      },
+      {
+        "text": "I want to check some details about cz6201",
+        "intent": "search_flight"
+      },
+      {
+        "text": "a flight which number is JL65 at Nov 12",
+        "intent": "search_flight"
+      },
+      {
+        "text": "find the flight 9c2365 at Sep 23",
+        "intent": "search_flight"
+      },
+      {
+        "text": "can you help me to search NH243 today?",
+        "intent": "search_flight"
+      },
+
+      {
+        "text": "no",
+        "intent": "deny"
+      },
+      {
+        "text": "it doesn't work",
+        "intent": "deny"
+      },
+      {
+        "text": "i don't like it",
+        "intent": "deny"
+      },
+      {
+        "text": "i don't think so",
+        "intent": "deny"
+      },
+      {
+        "text": "it is not good",
+        "intent": "deny"
+      },
+      {
+        "text": "it's a bad idea",
+        "intent": "deny"
+      },
+      {
+        "text": "doesn't fit me",
+        "intent": "deny"
+      },
+      {
+        "text": "it won't work",
+        "intent": "deny"
+      },
+      {
+        "text": "i am not fond of it",
+        "intent": "deny"
+      },
+      {
+        "text": "i don't think it is a good choice",
+        "intent": "deny"
+      },
+      {
+        "text": "no, I hate Air China",
+        "intent": "deny"
+      },
+      {
+        "text": "no, I don't want to leave in the morning",
+        "intent": "deny"
+      },
+      {
+        "text": "I hate this airport",
+        "intent": "deny"
+      },
+      {
+        "text": "sorry, I don't think so.",
+        "intent": "deny"
+      },
+
+      {
+        "text": "bye",
+        "intent": "goodbye",
+        "entities": []
+      },
+      {
+        "text": "goodbye",
+        "intent": "goodbye",
+        "entities": []
+      },
+      {
+        "text": "good bye",
+        "intent": "goodbye",
+        "entities": []
+      },
+      {
+        "text": "stop",
+        "intent": "goodbye",
+        "entities": []
+      },
+      {
+        "text": "end",
+        "intent": "goodbye",
+        "entities": []
+      },
+      {
+        "text": "Bye bye",
+        "intent": "goodbye",
+        "entities": []
+      }
+    ]
+  }
+}
