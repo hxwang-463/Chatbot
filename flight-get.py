@@ -9,11 +9,11 @@ from PIL import Image
 def get_flights_list():
     base_url = 'http://www.variflight.com'
 
-    dep = "pek"
-    arr = "hrb"
+    dep = "hrb"
+    arr = "pek"
 
-    test = base_url+"/flight/{}-{}.html?AE71649A58c77".format(dep, arr)
-
+    test = base_url+"/flight/{}-{}.html?AE71649A58c77&fdate=20190809".format(dep, arr)
+    #test = "http://www.variflight.com/flight/fnum/LT4301.html?AE71649A58c77&fdate=20190809"
     r = requests.get(test)
 
     selector = etree.HTML(r.text)
@@ -39,15 +39,20 @@ def get_flights_list():
             if (len(is_share) == 1):
                 continue
             a = selector.xpath('div[@class="li_com"]/span[1]/b/a//text()')  # 航班信息
-            a = a[0] + '' + a[1]
+            f1 = a[0]
+            f2 = a[1][:2]
+            f3 = a[1]
+            a = a[0] + '!' + a[1]
 
             b = selector.xpath('div[@class="li_com"]/span[2]/@dplan')  # 计划起飞
+
 
             c = selector.xpath('div[@class="li_com"]/span[3]/img/@src')  # 实际起飞
             if c:
                 url = base_url + c[0]
                 resp = r.get(url)
-                filename = './pictures' + re.search(r's=(.*?)==', url).group(0) + '.png'
+                #filename = './pictures' + re.search(r's=(.*?)==', url).group(0) + '.png'
+                filename = './pictures' + '.png'
                 with open(filename, 'wb') as f:
                     f.write(resp.content)
                 c = pytesseract.image_to_string(Image.open(filename))
@@ -70,7 +75,8 @@ def get_flights_list():
                 f = selector.xpath('div[@class="li_com"]/span[6]/img/@src')  # 实际到达
                 url = base_url + f[0]
                 resp = r.get(url)
-                filename = './pictures' + re.search(r's=(.*?)==', url).group(0) + '.png'
+                # filename = './pictures' + re.search(r's=(.*?)==', url).group(0) + '.png'
+                filename = './pictures' + '.png'
                 with open(filename, 'wb') as f:
                     f.write(resp.content)
                 f = pytesseract.image_to_string(Image.open(filename))
@@ -85,7 +91,7 @@ def get_flights_list():
             i = selector.xpath('div[@class="li_com"]/span[9]/text()')  # 状态
 
             h = base_url + h[0]  # 准点率
-            filename = './pictures' + re.search(r's=(.*?)=', h).group(0) + '.png'
+            filename = './pictures' + '.png'
 
             q = r.get(h)
 
@@ -94,7 +100,8 @@ def get_flights_list():
             q = pytesseract.image_to_string(Image.open(filename))
             os.remove(filename)
             if len(q) < 5:
-                q = q[:2] + ':' + q[2:]
+                if q != "100%":
+                    q = q[:2] + ':' + q[2:]
 
             mydict = {
                 "title": a,  # 航班信息

@@ -338,6 +338,222 @@
         "intent": "ask_detail"
       },
 
+
+
+
+      {
+        "text": "I prefer Air China in the morning",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 9,
+            "end": 18,
+            "value": "Air China",
+            "entity": "airlines"
+          },
+          {
+            "start": 26,
+            "end": 33,
+            "value": "morning",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "I want to check China Southern airlines in the evening",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 16,
+            "end": 30,
+            "value": "China Southern",
+            "entity": "airlines"
+          },
+          {
+            "start": 47,
+            "end": 54,
+            "value": "evening",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "Delta airways after 8 pm",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 0,
+            "end": 5,
+            "value": "Delta",
+            "entity": "airlines"
+          },
+          {
+            "start": 14,
+            "end": 24,
+            "value": "after 8 pm",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "maybe Japan Airlines before 12 am, with the on_time performance above 80%",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 6,
+            "end": 11,
+            "value": "Japan",
+            "entity": "airlines"
+          },
+          {
+            "start": 21,
+            "end": 33,
+            "value": "before 12 am",
+            "entity": "time"
+          },
+          {
+            "start": 70,
+            "end": 73,
+            "value": "80%",
+            "entity": "rate"
+          }
+        ]
+      },
+      {
+        "text": "I want it in the afternoon by Cathay Pacific",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 30,
+            "end": 44,
+            "value": "Cathay Pacific",
+            "entity": "airlines"
+          },
+          {
+            "start": 17,
+            "end": 26,
+            "value": "afternoon",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "I prefer a midnight flight operated by British Airways",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 39,
+            "end": 46,
+            "value": "British",
+            "entity": "airlines"
+          },
+          {
+            "start": 11,
+            "end": 19,
+            "value": "midnight",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "I want it in the noon and by China Eastern",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 29,
+            "end": 42,
+            "value": "China Eastern",
+            "entity": "airlines"
+          },
+          {
+            "start": 17,
+            "end": 21,
+            "value": "noon",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "operated by Hainan Airlines after 5 pm with the on_time rate above 70%",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 12,
+            "end": 18,
+            "value": "Hainan",
+            "entity": "airlines"
+          },
+          {
+            "start": 28,
+            "end": 38,
+            "value": "after 5 pm",
+            "entity": "time"
+          },
+          {
+            "start": 67,
+            "end": 70,
+            "value": "70%",
+            "entity": "rate"
+          }
+        ]
+      },
+      {
+        "text": "by All Nippon Airways and rate above 90%",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 3,
+            "end": 13,
+            "value": "All Nippon",
+            "entity": "airlines"
+          },
+          {
+            "start": 37,
+            "end": 40,
+            "value": "90%",
+            "entity": "rate"
+          }
+        ]
+      },
+      {
+        "text": "departure at night",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 13,
+            "end": 18,
+            "value": "night",
+            "entity": "time"
+          }
+        ]
+      },
+      {
+        "text": "by Sichuan Airlines",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 3,
+            "end": 10,
+            "value": "Sichuan",
+            "entity": "airlines"
+          }
+        ]
+      },
+      {
+        "text": "I want the on-time performance above 60%",
+        "intent": "add_filter",
+        "entities": [
+          {
+            "start": 37,
+            "end": 40,
+            "value": "60%",
+            "entity": "rate"
+          }
+        ]
+      },
+
+
+
       {
         "text": "i want to fly from boston and arrive in denver at Oct 16",
         "intent": "search_flight"
