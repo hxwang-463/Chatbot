@@ -11,6 +11,7 @@ import sqlite3
 import requests
 import pytesseract
 import os
+import logging
 
 
 TOKEN = "874251429:AAGbXIM9_cn6ArfilkiFtm0AUK4Hq_PoefM"
@@ -20,13 +21,18 @@ trainer = Trainer(config.load("config_spacy.yml"))  # Create a trainer that uses
 training_data = load_data('rasa-flight.json')  # Load the training data
 interpreter = trainer.train(training_data)  # Create an interpreter by training the model
 
-conn = sqlite3.connect('flight.db')
+conn = sqlite3.connect('flight.db', check_same_thread = False)
 c = conn.cursor()
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                    level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 INIT = 0
 DATE_REQ = 1
 AIRPORT_CHOOSE = 2
 FLIGHT_LIST = 3
+GET_DETAIL = 4
 
 state = INIT
 Departure = ""
@@ -36,6 +42,7 @@ Date = ""
 Cache = ""
 params = {"dep1": "", "dep2": "", "arr1": "", "arr2": "", "airlines": "", "rate": ""}
 neg_params = {"dep1": "", "dep2": "", "arr1": "", "arr2": "", "airlines": ""}
+specific_flight = {}
 
 
 def send_message(state, message):
@@ -59,7 +66,7 @@ def respond(state, message):
             return INIT, "Hi, I can help you search any flight you want, " \
                          "by Flight number, Airport or Route with the date!"
         elif intent == "search_flight":
-            if date == "0":
+            if date == "0" and Date == "":
                 Cache = message
                 return DATE_REQ, "what date do you want to search?"
             else:
@@ -92,7 +99,8 @@ def respond(state, message):
                     for i in range(k):
                         port_list = port_list + airport_list["dep"]["data"][i]["iata"] + " : " + \
                                   airport_list["dep"]["data"][i]["name"]+'\n'
-                    response = "{} airports available for departure, choose one you want by its code:\n".format(k) + port_list
+                    response = "{} airports available for departure, " \
+                               "choose one you want by its code:\n".format(k) + port_list
                     return AIRPORT_CHOOSE, response
 
                 if dep_len == 1 and arr_len > 1:
@@ -103,7 +111,7 @@ def respond(state, message):
                         port_list = port_list + airport_list["arr"]["data"][i]["iata"] + " : " + \
                                     airport_list["arr"]["data"][i]["name"] + '\n'
                     response = "{} airports available for arrival," \
-                               " choose one you want by its code.".format(k) + port_list
+                               " choose one you want by its code.\n".format(k) + port_list
                     return AIRPORT_CHOOSE, response
         else:
             return INIT, "sorry I don't understand.\nI can help you search any flight you want, " \
@@ -116,16 +124,17 @@ def respond(state, message):
 
     if state == AIRPORT_CHOOSE:
         message = message.lower()
-        if isinstance(Departure, str) is None:
+        print(Departure)
+        if isinstance(Departure, str) is False:
             Departure = re.search(r"\b[a-z]{3}\b", message).group(0)
-            if isinstance(Arrival, str) is None:
+            if isinstance(Arrival, str) is False:
                 k = min(len(Arrival), 3)
                 port_list = ""
                 for i in range(k):
                     port_list = port_list + Arrival[i]["iata"] + " : " + \
                                 Arrival[i]["name"] + '\n'
                 response = "{} airports available for arrival," \
-                           " choose one you want by its code.".format(k) + port_list
+                           " choose one you want by its code.".format(k) + "\n" + port_list
                 return AIRPORT_CHOOSE, response
             else:
                 response = get_list(Departure, Arrival, F_num, Date)
@@ -140,6 +149,9 @@ def respond(state, message):
             return FLIGHT_LIST, response + "\nwhich one or what kind of flight do you want to check in detail?"
 
     if state == FLIGHT_LIST:
+        if re.search(r"^[0-9]{1,2}$", message) is not None:
+            fill_specific(message)
+            return GET_DETAIL, "Greet!\nNow you can ask more information about this flight!"
         intent, airlines, time, rate = interpret(message, state)
         if intent == "ask_detail":
             return FLIGHT_LIST, "you can choose one by its code or number, " \
@@ -156,13 +168,34 @@ def respond(state, message):
                 return FLIGHT_LIST, "sorry, no found~\nyou can choose again!"
 
 
+def fill_specific(num):
+    global c, specific_flight, Departure, Arrival, F_num
+    query = "SELECT * FROM flight WHERE f0={}".flomat(num)
+    c.execute("{}".format(query))
+    results = c.fetchall()
+    F_num = results[0][3]
+    specific_flight["dep"] = results[0][4]
+    specific_flight["dep_real"] = results[0][5]
+    specific_flight["arr"] = results[0][7]
+    specific_flight["arr_real"] = results[0][8]
+    specific_flight["rate"] = results[0][10]
+    specific_flight["status"] = results[0][11]
+
+    url = "http://www.variflight.com/schedule/{}-{}-{}.html?AE71649A58c77=&fdate=20190810".\
+        format(Departure, Arrival, F_num)
+
+
+
+
+
+
 def make_params(message, airlines, time, rate):
     global params, neg_params
     if time["dep1"]:
         if time["deptorf"]:
             params["dep1"] = time["dep1"]
         else:
-           neg_params["dep1"] = time["dep1"]
+            neg_params["dep1"] = time["dep1"]
     if time["dep2"]:
         if time["deptorf"]:
             params["dep2"] = time["dep2"]
@@ -172,7 +205,7 @@ def make_params(message, airlines, time, rate):
         if time["arrtorf"]:
             params["arr1"] = time["arr1"]
         else:
-           neg_params["arr1"] = time["arr1"]
+            neg_params["arr1"] = time["arr1"]
     if time["arr2"]:
         if time["arrtorf"]:
             params["arr2"] = time["arr2"]
@@ -193,11 +226,10 @@ def get_list(dep, arr, f_num, date):  # html ; sql
         put_flights_sql('http://www.variflight.com/flight/fnum/{}.html?AE71649A58c77&fdate={}'.format(f_num, date))
     else:
         put_flights_sql("http://www.variflight.com/flight/{}-{}.html?AE71649A58c77&fdate={}".format(dep, arr, date))
-
     c.execute("SELECT count(*) FROM flight")
     length = c.fetchall()[0][0]
-    params = {}
-    neg_params = {}
+    params = {"dep1": "", "dep2": "", "arr1": "", "arr2": "", "airlines": "", "rate": ""}
+    neg_params = {"dep1": "", "dep2": "", "arr1": "", "arr2": "", "airlines": ""}
     if length == 0:
         response = "NO FOUND"
         return response
@@ -213,7 +245,7 @@ def get_list(dep, arr, f_num, date):  # html ; sql
 def put_flights_sql(url):
     global c
     c.execute("CREATE TABLE IF NOT EXISTS flight(f0 int,f1 text,f2 text,f3 text,f4 text,f5 text,"
-              "f6 text,f7 text,f8 text,f9 text,f10 text,f11 text)")
+              "f6 text,f7 text,f8 text,f9 text,f10 text,f11 text,f12 int,f13 int)")
     c.execute("DELETE from flight")
 
     base_url = 'http://www.variflight.com'
@@ -288,10 +320,12 @@ def put_flights_sql(url):
             if len(q) < 6:
                 q = q[:2] + '.' + q[2:]
             f10 = q[:5]
+            f12=int(f4[0][:2])
+            f13=int(f7[0][:2])
 
-            value = "VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}')" \
-                .format(num, f1, f2, f3, f4[0], f5, f6[0], f7[0], f8, f9[0], f10, f11[0])
-            c.execute("INSERT INTO flight(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11) {}".format(value))
+            value = "VALUES({},'{}','{}','{}','{}','{}','{}','{}','{}','{}','{}','{}', {}, {})" \
+                .format(num, f1, f2, f3, f4[0], f5, f6[0], f7[0], f8, f9[0], f10, f11[0], f12, f13)
+            c.execute("INSERT INTO flight(f0,f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13) {}".format(value))
             num = num + 1
 
     else:
@@ -305,22 +339,22 @@ def print_flight(c, params, neg_params):
     query = 'SELECT * FROM flight'
     text = []
     if params["dep1"]:
-        text = text + ["f4>{}".format(params["dep1"])]
+        text = text + ["f12>{}".format(params["dep1"])]
     if params["dep2"]:
-        text = text + ["f4<{}".format(params["dep2"])]
+        text = text + ["f12<{}".format(params["dep2"])]
     if params["arr1"]:
-        text = text + ["f7>{}".format(params["arr1"])]
+        text = text + ["f13>{}".format(params["arr1"])]
     if params["arr2"]:
-        text = text + ["f7<{}".format(params["arr2"])]
+        text = text + ["f13<{}".format(params["arr2"])]
 
     if neg_params["dep1"]:
-        text = text + ["f4<{}".format(neg_params["dep1"])]
+        text = text + ["f12<{}".format(neg_params["dep1"])]
     if neg_params["dep2"]:
-        text = text + ["f4>{}".format(neg_params["dep2"])]
+        text = text + ["f12>{}".format(neg_params["dep2"])]
     if neg_params["arr1"]:
-        text = text + ["f7<{}".format(neg_params["arr1"])]
+        text = text + ["f13<{}".format(neg_params["arr1"])]
     if neg_params["arr2"]:
-        text = text + ["f7>{}".format(neg_params["arr2"])]
+        text = text + ["f13>{}".format(neg_params["arr2"])]
 
     if params["airlines"]:
         airline_code = airline2code(params["airlines"])
@@ -333,18 +367,21 @@ def print_flight(c, params, neg_params):
         text = text + ["f10>{}".format(params["rate"])]
 
     t = ' AND '.join(text)
-    p = query + ' WHERE ' + t
-    c.execute(p)
+    if t:
+        p = query + ' WHERE ' + t
+    else:
+        p = query
+    c.execute("{}".format(p))
     results = c.fetchall()
     response = ""
     for r in results:
-        response = response+"{} {} {}-{} {}\n".format(r[0], r[3].ljust(6, " "), r[4], r[7], r[11])
+        response = response+"NO.{} {} : {}-{}  {}\n".format(r[0], r[3].ljust(6, " "), r[4], r[7], r[11])
 
     return response
 
 
 def airline2code(airline):
-    url = 'http://www.flightstats.com/v2/api-next/search/airline-airport?query={}&type=airline&rqid=wz0b9ty387c'.format(airline)
+    url = 'http://www.flightstats.com/v2/api-next/search/airline-airport?query={}&type=airline&rqid=wz0b8ty387c'.format(airline)
     r = requests.get(url)
     return r.json()["data"][0]["fs"]
 
@@ -447,7 +484,7 @@ def negated_ents(phrase, ent_vals):
     for chunk in chunks:
         for ent in ents:
             if ent in chunk:
-                if "not" in chunk or "n't" in chunk or "no" in chunk:
+                if "not" in chunk or "n't" in chunk:
                     result[ent] = False
                 else:
                     result[ent] = True
@@ -485,7 +522,7 @@ def city2code(message, doc, text): # return datype: dep or arr, airportcode in j
     if datype == 0:
         datype = "unknown"
 
-    url = 'http://www.flightstats.com/v2/api-next/search/airline-airport?query={}&type=airport&rqid=wz0b9ty387c'.format(text)
+    url = 'http://www.flightstats.com/v2/api-next/search/airline-airport?query={}&type=airport&rqid=wz0b7ty387c'.format(text)
     r = requests.get(url)
     return datype, r
 
