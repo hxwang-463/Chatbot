@@ -59,7 +59,7 @@ def main(message):
 
 
 def respond(state, message):
-    global Departure, Arrival, F_num, Date, Cache, params, neg_params, c
+    global Departure, Arrival, F_num, Date, Cache, params, neg_params, c, specific_flight
     if state == INIT:
         intent, search_type, airport_list, date = interpret(message, state)
         if intent == "ask_detail" or intent == "greet":
@@ -167,10 +167,37 @@ def respond(state, message):
                 neg_params = {"dep1": "", "dep2": "", "arr1": "", "arr2": "", "airlines": ""}
                 return FLIGHT_LIST, "sorry, no found~\nyou can choose again!"
 
+    if state == GET_DETAIL:
+        intent, entity, no_use, no_use1 = interpret(message, state)
+        if intent == "ask_detail":
+            if len(entity) == 0:
+                return GET_DETAIL, "you can check the actual time of departure/arrival, type and age of " \
+                                   "the aircraft, length of route, on-time rate, or status right now~"
+            else:
+                if entity == "time":
+                    response = "{}:\nScheduled:{}\nActual   :{}\n{}:\nScheduled:{}\nActual   :{}".\
+                        format(Departure.upper(), specific_flight["dep"], specific_flight["dep_real"],
+                               Arrival.upper(),  specific_flight["arr"], specific_flight["arr_real"])
+                    return GET_DETAIL, response+"\n\nAnything else?"
+                elif entity == "rate":
+                    return GET_DETAIL, "the history average on-time performance" \
+                                       " is {}%\n\nAnything else?".format(specific_flight["rate"])
+                elif entity == "status":
+                    return GET_DETAIL, "{}, {}\n\nAnything else?".format(specific_flight["status"],
+                                                                         specific_flight["status_more"])
+                elif entity == "type":
+                    return GET_DETAIL, "Aircraft Equipment is:\n{}\n\n Anything else?".format(specific_flight["type"])
+                elif entity == "route":
+                    print(specific_flight["length_time"])
+                    return GET_DETAIL, "{}\n{}\n\n Anything else?".\
+                        format(specific_flight["distance"], specific_flight["length_time"])
+        if intent == "deny":
+            return INIT, "Good bye!"
+
 
 def fill_specific(num):
-    global c, specific_flight, Departure, Arrival, F_num
-    query = "SELECT * FROM flight WHERE f0={}".flomat(num)
+    global c, specific_flight, Departure, Arrival, F_num, Date
+    query = "SELECT * FROM flight WHERE f0={}".format(num)
     c.execute("{}".format(query))
     results = c.fetchall()
     F_num = results[0][3]
@@ -181,12 +208,16 @@ def fill_specific(num):
     specific_flight["rate"] = results[0][10]
     specific_flight["status"] = results[0][11]
 
-    url = "http://www.variflight.com/schedule/{}-{}-{}.html?AE71649A58c77=&fdate=20190810".\
-        format(Departure, Arrival, F_num)
-
-
-
-
+    url = "http://www.variflight.com/schedule/{}-{}-{}.html?AE71649A58c77=&fdate={}".\
+        format(Departure, Arrival, F_num, Date)
+    r = requests.get(url)
+    selector = etree.HTML(r.text)
+    specific_flight["distance"] = selector.xpath('//*[@class="p_ti"]/span[1]/text()')[0]
+    specific_flight["length_time"] = selector.xpath('//*[@class="p_ti"]/span[2]/text()')[0]
+    print(specific_flight["length_time"])
+    specific_flight["type"] = selector.xpath('//*[@class="p_info"]//text()')[3]
+    specific_flight["age"] = selector.xpath('//*[@class="p_info"]//text()')[6]
+    specific_flight["status_more"] = selector.xpath('//*[@class="p_info"]//text()')[13]
 
 
 def make_params(message, airlines, time, rate):
@@ -218,6 +249,8 @@ def make_params(message, airlines, time, rate):
             params["airlines"] = airlines["name"]
         else:
             neg_params["airlines"] = airlines["name"]
+    print(params["airlines"])
+    print(neg_params["airlines"])
 
 
 def get_list(dep, arr, f_num, date):  # html ; sql
@@ -394,6 +427,8 @@ def interpret(message, state):
     intent = data["intent"]["name"]
     if intent == "greet":
         return intent, {}, {}, {}
+    if intent == "deny":
+        return intent, {}, {}, {}
 
     if intent == "search_flight":
         airportlist = {}
@@ -470,6 +505,11 @@ def interpret(message, state):
                 airlines["torf"] = torf[ent.text]
                 airlines["name"] = ent.text
         return intent, airlines, time, rate
+    elif intent == "ask_detail":
+        if len(data["entities"]) == 0:
+            return intent, {}, {}, {}
+        else:
+            return intent, data["entities"][0]["value"], {}, {}
 
 
 def negated_ents(phrase, ent_vals):
