@@ -7,9 +7,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 * Filter the flight results by the airline, departure/ arrival time range, or the on-time performance
 * Get details about scheduled departure/ arrival time, actual departure/arrival time, historical on-time performance, status (preparing, cancel, arrived, etc.), type of aircraft, length of route, etc.
 <figure class="third">
-    <img src="/Sample dialogues/1.gif" title="flights search" width="230">
-    <img src="/Sample dialogues/2.gif" title="choose flight" width="230">
-    <img src="/Sample dialogues/3.gif" title="get detail" width="230">
+    <img src="/Sample dialogues/1.gif" title="flights search" width="230"><img src="/Sample dialogues/2.gif" title="choose flight" width="230"><img src="/Sample dialogues/3.gif" title="get detail" width="230">
 </figure>
 
 ## Getting started
@@ -25,7 +23,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 ## Enviroments and Packages
 
 **Python 3.7 with Anaconda**
-#### Rasa NLU
+### Rasa NLU
 [**Rasa**](rasa.com) is an open source machine learning framework for building contextual AI assistants and chatbots.
 
 Install with:
@@ -43,7 +41,7 @@ training_data = load_data('rasa-flight.json')  # Load the training data
 interpreter = trainer.train(training_data)  # Create an interpreter by training the model
 ```
 
-#### spaCy
+### spaCy
 [**spaCy**](spacy.io) is a Industrial-Strength Natural Language Processing toolkit, which contains pre-trained models for multi-language.
 
 Install and Download pre-trained model for English with:
@@ -56,7 +54,7 @@ import spacy
 nlp = spacy.load("en_core_web_sm") # load English model
 ```
 
-#### Other Packages
+### Other Packages
 **Telegram API:** python-telegram-bot  `$ pip install python-telegram-bot --upgrade`
 
 **Requests:** HTTP library for Python   `$ pip install requests`
