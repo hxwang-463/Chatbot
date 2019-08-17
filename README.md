@@ -27,6 +27,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 [**Rasa**](rasa.com) is an open source machine learning framework for building contextual AI assistants and chatbots.
 
 Install with:
+
 `$ pip install rasa-x --extra-index-url https://pypi.rasa.com/simple`
 
 Using by:
@@ -45,6 +46,7 @@ interpreter = trainer.train(training_data)  # Create an interpreter by training 
 [**spaCy**](spacy.io) is a Industrial-Strength Natural Language Processing toolkit, which contains pre-trained models for multi-language.
 
 Install and Download pre-trained model for English with:
+
 `$ pip install -U spacy`
 `$ python -m spacy download en_core_web_sm`
 
