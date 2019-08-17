@@ -6,7 +6,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 * Search flights by its flight number in one certain day
 * Filter the flight results by the airline, departure/ arrival time range, or the on-time performance
 * Get details about scheduled departure/ arrival time, actual departure/arrival time, historical on-time performance, status (preparing, cancel, arrived, etc.), type of aircraft, length of route, etc.
-<figure class="third">
+<center class="half">
     <img src="/Sample dialogues/1.gif" title="flights search" width="230"><img src="/Sample dialogues/2.gif" title="choose flight" width="230"><img src="/Sample dialogues/3.gif" title="get detail" width="230">
 </figure>
 
