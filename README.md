@@ -6,13 +6,13 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 * Search flights by its flight number in one certain day
 * Filter the flight results by the airline, departure/ arrival time range, or the on-time performance
 * Get details about scheduled departure/ arrival time, actual departure/arrival time, historical on-time performance, status (preparing, cancel, arrived, etc.), type of aircraft, length of route, etc.
-<center class="half">
-    <img src="/Sample dialogues/1.gif" title="flights search" width="230"><img src="/Sample dialogues/2.gif" title="choose flight" width="230"><img src="/Sample dialogues/3.gif" title="get detail" width="230">
-</figure>
+*
+![image](Sample_dialogues/1.gif)![image](Sample_dialogues/2.gif)![image](Sample_dialogues/3.gif)
+
 
 ## Getting started
 **Create a new bot belongs to you on Telegram in 3 easy steps**
-* search [*BotFather*](https://telegram.me/BotFather) on Telegram
+* search [*BotFather*](telegram.me/BotFather) on Telegram
 * text **/newbot** to BotFather, and follow directions shown
 * get the control TOKEN of your bot
 
