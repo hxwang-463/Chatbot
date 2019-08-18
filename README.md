@@ -12,7 +12,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 
 ## Getting started
 **Create a new bot belongs to you on Telegram in 3 easy steps**
-* search [*BotFather*](telegram.me/BotFather) on Telegram
+* search [*BotFather*](https://telegram.me/BotFather) on Telegram
 * text **/newbot** to BotFather, and follow directions
 * get the control TOKEN of your bot
 
@@ -24,7 +24,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 
 **Python 3.7 with Anaconda**
 ### Rasa NLU
-[**Rasa**](rasa.com) is an open source machine learning framework for building contextual AI assistants and chatbots.
+[**Rasa**](https://rasa.com) is an open source machine learning framework for building contextual AI assistants and chatbots.
 
 Install with:
 
@@ -43,7 +43,7 @@ interpreter = trainer.train(training_data)  # Create an interpreter by training 
 ```
 
 ### spaCy
-[**spaCy**](spacy.io) is a Industrial-Strength Natural Language Processing toolkit, which contains pre-trained models for multi-language.
+[**spaCy**](https://spacy.io) is a Industrial-Strength Natural Language Processing toolkit, which contains pre-trained models for multi-language.
 
 Install and Download pre-trained model for English with:
 
