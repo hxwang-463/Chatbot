@@ -13,7 +13,7 @@ In this chatbot project, we build an intelligent chatbot using natural language 
 ## Getting started
 **Create a new bot belongs to you on Telegram in 3 easy steps**
 * search [*BotFather*](telegram.me/BotFather) on Telegram
-* text **/newbot** to BotFather, and follow directions shown
+* text **/newbot** to BotFather, and follow directions
 * get the control TOKEN of your bot
 
 **Replace the TOKEN in main.py, line 17**
